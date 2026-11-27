@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block content %}<h4>Invoices</h4>
+<table class="table table-sm table-striped bg-white"><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr>
+{% for i in invoices %}<tr><td>{{ i.invoice_no }}</td><td>{{ i.invoice_date }}</td><td>{{ i.customer.name }}</td><td>{{ i.total }}</td><td>{{ i.paid }}</td><td>{{ i.balance }}</td><td>{{ i.status }}</td><td><a href="{{ url_for('billing.invoice', iid=i.id) }}">Open</a></td></tr>{% endfor %}</table>{% endblock %}

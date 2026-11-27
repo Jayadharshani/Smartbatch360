@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}<h4>New Order</h4>
+<form method="post" class="card card-body" style="max-width:640px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label class="form-label">Customer</label><select name="customer_id" class="form-select form-select-lg mb-3">{% for c in customers %}<option value="{{ c.id }}">{{ c.name }} ({{ c.state }})</option>{% endfor %}</select>
+{% for p in products %}<div class="row g-2 align-items-center mb-2"><div class="col-6"><b>{{ p.name }}</b><div class="small text-muted">Rs. {{ p.price }} + {{ p.gst_rate }}% GST</div></div>
+<div class="col-6"><input name="qty_{{ p.id }}" type="number" min="0" step="1" inputmode="numeric" data-price="{{ p.price }}" class="form-control form-control-lg qty" placeholder="Qty"></div></div>{% endfor %}
+<div class="fs-5 my-2">Total (before GST): Rs. <span id="tot">0.00</span></div>
+<button class="btn btn-primary btn-lg">Submit order</button></form>{% endblock %}
+{% block scripts %}<script>document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input',()=>{let t=0;document.querySelectorAll('.qty').forEach(x=>t+=(+x.value||0)*(+x.dataset.price));document.getElementById('tot').textContent=t.toFixed(2)}));</script>{% endblock %}

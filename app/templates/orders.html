@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}<h4>Orders</h4>
+<div class="table-responsive"><table class="table table-sm table-striped bg-white"><tr><th>Order</th><th>Customer</th><th>Salesman</th><th>Total</th><th>Status</th><th></th></tr>
+{% for o in orders %}<tr><td>{{ o.order_no }}</td><td>{{ o.customer.name }}</td><td>{{ o.salesman.full_name }}</td><td>{{ o.total }}</td>
+<td><span class="badge text-bg-{{ {'SUBMITTED':'secondary','APPROVED':'info','REJECTED':'danger','INVOICED':'primary','PARTIALLY_DISPATCHED':'warning','DISPATCHED':'success'}[o.status] }}">{{ o.status }}</span></td>
+<td><a href="{{ url_for('sales.order', oid=o.id) }}">Open</a></td></tr>{% endfor %}</table></div>{% endblock %}

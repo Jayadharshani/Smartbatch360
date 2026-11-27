@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}
+<div class="d-flex justify-content-between mb-3"><h4>{{ title }}</h4><div>{% for l, u in actions %}<a class="btn btn-outline-primary btn-sm" href="{{ u }}">{{ l }}</a> {% endfor %}</div></div>
+<div class="table-responsive"><table class="table table-sm table-striped bg-white"><thead class="table-dark"><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+<tbody>{% for r in rows %}<tr class="{{ 'table-warning' if 'LOW' in r or 'FLAG' in r else '' }}">{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% else %}<tr><td colspan="{{ headers|length }}" class="text-muted">No data</td></tr>{% endfor %}</tbody></table></div>{% endblock %}

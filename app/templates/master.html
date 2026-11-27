@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}<h4>{{ title }}</h4>
+{% if fields %}<form method="post" class="card card-body mb-3"><div class="row g-2"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{% for f in fields %}<div class="col-md-3"><label class="form-label small">{{ f.l }}</label>
+{% if f.opts %}<select name="{{ f.n }}" class="form-select">{% for v, t in f.opts %}<option value="{{ v }}">{{ t }}</option>{% endfor %}</select>
+{% else %}<input name="{{ f.n }}" type="{{ f.t or 'text' }}" step="any" value="{{ f.v or '' }}" class="form-control" {{ 'required' if f.req is not defined or f.req }}>{% endif %}</div>{% endfor %}
+<div class="col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100">Add</button></div></div></form>{% endif %}
+<div class="table-responsive"><table class="table table-sm table-striped bg-white"><tr>{% for c in cols %}<th>{{ c }}</th>{% endfor %}{% if name == 'products' %}<th>BOM</th>{% endif %}</tr>
+{% for r in rows %}<tr>{% for c in cols %}<td>{{ r[c] }}</td>{% endfor %}{% if name == 'products' %}<td><a href="{{ url_for('master.bom', product_id=r.id) }}">View / versions</a></td>{% endif %}</tr>{% endfor %}</table></div>{% endblock %}

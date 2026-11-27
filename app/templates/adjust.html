@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block content %}<h4>Stock Adjustment (traceable)</h4>
+<form method="post" class="card card-body" style="max-width:500px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Item</label><select name="item_id" class="form-select mb-2">{% for i in items %}<option value="{{ i.id }}">{{ i.name }} ({{ i.stock }} {{ i.unit }})</option>{% endfor %}</select>
+<label>Quantity change (+ add / - remove)</label><input name="delta" type="number" step="any" class="form-control mb-2" required>
+<label>Reason</label><input name="reason" class="form-control mb-3" required>
+<button class="btn btn-warning" onclick="return confirm('Post this adjustment?')">Post adjustment</button></form>{% endblock %}

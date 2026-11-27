@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}<div class="d-flex justify-content-between"><h4>Production History</h4>{% if current_user.role == 'production' %}<a class="btn btn-primary" href="{{ url_for('production.new_run') }}">New run</a>{% endif %}</div>
+<div class="table-responsive"><table class="table table-sm table-striped bg-white mt-2"><tr><th>Batch</th><th>Date</th><th>Product</th><th>BOM v</th><th>Expected</th><th>Actual</th><th>Yield var</th><th>Cost/pkt</th><th></th></tr>
+{% for r in runs %}<tr><td>{{ r.batch_no }}</td><td>{{ r.run_date }}</td><td>{{ r.product.name }}</td><td>{{ r.bom.version }}</td><td>{{ r.expected_output }}</td><td>{{ r.actual_output }}</td>
+<td>{{ '%.2f'|format(r.yield_variance_pct) }}%</td><td>{{ '%.2f'|format(r.cost_per_packet) }}</td><td><a href="{{ url_for('production.detail', run_id=r.id) }}">Open</a></td></tr>{% endfor %}</table></div>{% endblock %}

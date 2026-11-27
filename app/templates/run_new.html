@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}<h4>New Production Run</h4>
+<form method="get" class="row g-2 mb-3"><div class="col-md-3"><label>Product</label><select name="product_id" class="form-select" onchange="this.form.submit()">{% for p in products %}<option value="{{ p.id }}" {{ 'selected' if p.id == product.id }}>{{ p.name }}</option>{% endfor %}</select></div>
+<div class="col-md-3"><label>BOM version</label><select name="bom_id" class="form-select" onchange="this.form.submit()">{% for b in product.boms %}<option value="{{ b.id }}" {{ 'selected' if bom and b.id == bom.id }}>v{{ b.version }} {{ '(active)' if b.is_active }}</option>{% endfor %}</select></div>
+<div class="col-md-3"><label>Planned batches</label><input name="batches" value="{{ batches }}" type="number" step="any" class="form-control" onchange="this.form.submit()"></div></form>
+{% if bom %}<form method="post" class="card card-body"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="save" value="1"><input type="hidden" name="product_id" value="{{ product.id }}"><input type="hidden" name="bom_id" value="{{ bom.id }}"><input type="hidden" name="batches" value="{{ batches }}">
+<p class="mb-1">Expected output: <b>{{ bom.expected_output * batches }}</b> packets</p>
+<div class="table-responsive"><table class="table table-sm"><tr><th>Material</th><th>Planned</th><th>In stock</th><th>Actual consumption</th></tr>
+{% for l in lines %}<tr class="{{ 'table-danger' if l.stock < l.planned }}"><td>{{ l.bi.item.name }}</td><td>{{ l.planned }} {{ l.bi.item.unit }}</td><td>{{ l.stock }}</td>
+<td>{% if l.bi.item.code == 'POUCH' %}<span class="text-muted">auto = good output + damaged pouches</span>{% else %}<input name="actual_{{ l.bi.item_id }}" type="number" step="any" value="{{ l.planned }}" class="form-control form-control-sm" style="max-width:140px">{% endif %}</td></tr>{% endfor %}</table></div>
+<div class="row g-2"><div class="col-md-3"><label>Actual good output (packets)</label><input name="good_output" type="number" step="any" class="form-control" required></div>
+<div class="col-md-3"><label>Damaged pouches</label><input name="damaged" type="number" step="any" value="0" class="form-control"></div></div>
+<button class="btn btn-success mt-3" style="max-width:220px" onclick="return confirm('Save production run? Stock will be updated.')">Save production run</button></form>{% endif %}{% endblock %}

@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<h4>Reports</h4><div class="list-group" style="max-width:500px">
+{% for k, t in reports %}<a class="list-group-item list-group-item-action" href="{{ url_for('reports.view', key=k) }}"><i class="bi bi-table"></i> {{ t }}</a>{% endfor %}</div>{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}<h4>Intelligence</h4>
+<div class="card mb-3"><div class="card-body"><h6>Audit Assistant <span class="small text-muted">(answers come from database queries only)</span></h6>
+<form method="post" class="d-flex gap-2"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="q" value="{{ q }}" class="form-control" placeholder="e.g. What is the current flour stock? / Which customers have pending payments?"><button class="btn btn-primary">Ask</button></form>
+{% if ans %}<div class="alert alert-info mt-2 mb-0">{{ ans }}</div>{% endif %}</div></div>
+<div class="card mb-3"><div class="card-body"><h6>Production recommendation (pending orders vs finished stock)</h6>
+{% for r in recs %}<div class="mb-2"><b>{{ r.product }}</b>: pending {{ r.pending }}, stock {{ r.stock }}, shortfall {{ r.shortfall }} &rarr; <b>{{ r.batches }} batch(es)</b>
+{% if r.batches %}<span class="badge text-bg-{{ 'success' if r.can_produce else 'danger' }}">{{ 'Raw materials sufficient' if r.can_produce else 'Raw material shortage' }}</span>
+<ul class="mb-0">{% for m in r.materials %}<li class="{{ 'text-danger' if not m.ok }}">{{ m.item }}: need {{ m.need }} {{ m.unit }}, have {{ m.have }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</div></div>
+<div class="card mb-3"><div class="card-body"><h6>Anomaly detection (rule based: variance above tolerance &mdash; not machine learning)</h6>
+{% for a in found %}<div>{{ a.batch }} &ndash; <b>{{ a.kind }}</b>: {{ a.detail }}</div>{% else %}<span class="text-muted">No anomalies</span>{% endfor %}
+{% for r in repeats %}<div class="text-danger">Repeated variance: {{ r.item }} ({{ r.count }} runs)</div>{% endfor %}</div></div>
+<div class="card"><div class="card-body"><h6>Financial loss impact (total excess material cost: Rs. {{ loss_total }})</h6>
+<table class="table table-sm"><tr><th>Batch</th><th>Excess materials</th><th>Excess cost</th><th>Packets short</th><th>Yield loss (at cost)</th></tr>
+{% for l in loss %}<tr><td>{{ l.batch }}</td><td>{% for n, q, c in l.excess %}{{ n }} +{{ q }}; {% endfor %}</td><td>Rs. {{ l.excess_cost }}</td><td>{{ l.yield_short }}</td><td>Rs. {{ l.yield_loss }}</td></tr>{% endfor %}</table></div></div>{% endblock %}

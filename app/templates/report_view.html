@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}<h4>{{ title }}</h4>
+<form class="row g-2 mb-3" method="get"><div class="col-auto"><input type="date" name="start" value="{{ start }}" class="form-control"></div><div class="col-auto"><input type="date" name="end" value="{{ end }}" class="form-control"></div>
+<div class="col-auto"><button class="btn btn-primary">Filter</button></div>
+<div class="col-auto ms-auto"><a class="btn btn-outline-success" href="{{ url_for('reports.view', key=key, start=start, end=end, format='xlsx') }}">Excel</a>
+<a class="btn btn-outline-secondary" href="{{ url_for('reports.view', key=key, start=start, end=end, format='csv') }}">CSV</a>
+<a class="btn btn-outline-danger" href="{{ url_for('reports.view', key=key, start=start, end=end, format='pdf') }}">PDF</a></div></form>
+<div class="table-responsive"><table class="table table-sm table-striped bg-white"><thead class="table-dark"><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+{% for r in rows %}<tr class="{{ 'table-warning' if 'FLAG' in r or 'LOW' in r }}">{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% else %}<tr><td colspan="{{ headers|length }}" class="text-muted">No data for this period</td></tr>{% endfor %}</table></div>{% endblock %}

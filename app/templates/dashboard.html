@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block content %}
+<h4 class="mb-3">Dashboard</h4>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-5 g-3 mb-3">
+{% for label, val, ic in [("Total Sales (incl. GST)", "Rs. " ~ kpi.total_sales, "bi-graph-up-arrow"), ("Today's Orders", kpi.today_orders, "bi-bag-check"), ("Pending Orders", kpi.pending, "bi-hourglass-split"), ("Production (packets)", kpi.total_production, "bi-box-seam"), ("Outstanding", "Rs. " ~ kpi.outstanding, "bi-wallet2")] %}
+<div class="col"><div class="card h-100"><div class="kpi"><div class="kpi-icon"><i class="bi {{ ic }}"></i></div><div><div class="kpi-label">{{ label }}</div><div class="kpi-value">{{ val }}</div></div></div></div></div>{% endfor %}
+</div>
+<div class="row g-3">
+ <div class="col-md-6"><div class="card h-100"><div class="card-body"><h6>Sales by day</h6><canvas id="c1" height="140"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card h-100"><div class="card-body"><h6>Production: expected vs actual</h6><canvas id="c2" height="140"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card h-100"><div class="card-body"><h6>Stock levels</h6><canvas id="c3" height="140"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card h-100"><div class="card-body"><h6 class="text-danger mb-2">Low-stock alerts</h6>
+  {% for i in low %}<div>{{ i.name }}: <b>{{ i.stock }} {{ i.unit }}</b> (level {{ i.reorder_level }})</div>{% else %}<span class="text-muted">None</span>{% endfor %}
+  <h6 class="text-danger mt-3">Production variance alerts</h6>
+  {% for a in alerts %}<div>{{ a.batch }} &ndash; {{ a.kind }}: {{ a.detail }}</div>{% else %}<span class="text-muted">None</span>{% endfor %}
+  <h6 class="mt-3">Cost per packet &amp; margin</h6>
+  {% for n, c, m, pct in margins %}<div>{{ n }}: cost Rs. {{ '%.2f'|format(c) }}, margin Rs. {{ '%.2f'|format(m) }} ({{ '%.1f'|format(pct) }}%)</div>{% else %}<span class="text-muted">No production yet</span>{% endfor %}
+ </div></div></div>
+</div>{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>const C={{ charts|safe }};
+new Chart(c1,{type:'bar',data:{labels:C.sales.labels,datasets:[{label:'Sales (Rs)',data:C.sales.data,backgroundColor:'#2563eb',maxBarThickness:48}]},options:{scales:{y:{beginAtZero:true}}}});
+new Chart(c2,{type:'bar',data:{labels:C.prod.labels,datasets:[{label:'Expected',data:C.prod.expected,backgroundColor:'#93c5fd'},{label:'Actual',data:C.prod.actual,backgroundColor:'#1d4ed8'}]}});
+new Chart(c3,{type:'bar',data:{labels:C.stock.labels,datasets:[{label:'Stock',data:C.stock.data,backgroundColor:'#0f2742'}]}});</script>{% endblock %}

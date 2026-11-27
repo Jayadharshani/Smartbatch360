@@ -1,0 +1,21 @@
+# Not tested on the author's machine - use as a starting point.
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: smartbatch360
+      MYSQL_USER: smartbatch
+      MYSQL_PASSWORD: smartpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+  web:
+    build: .
+    ports: ["5000:5000"]
+    environment:
+      SECRET_KEY: change-me
+      DATABASE_URL: mysql+pymysql://smartbatch:smartpass@db:3306/smartbatch360
+    depends_on:
+      db: {condition: service_healthy}

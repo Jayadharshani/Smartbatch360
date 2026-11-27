@@ -16,7 +16,7 @@ flask --app run demo           # full sample data (benchmark transactions done)
 python run.py                  # open http://127.0.0.1:5000
 ```
 Run the full benchmark (18 steps, computed through the real services): `flask --app run benchmark`
-Run tests: `python -m pytest -q`
+Run tests: `pip install -r requirements-dev.txt` then `python -m pytest -q`
 
 ### MySQL
 ```sql

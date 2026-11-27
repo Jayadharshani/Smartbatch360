@@ -18,6 +18,7 @@
 </div>{% endblock %}
 {% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>const C={{ charts|safe }};
-new Chart(c1,{type:'bar',data:{labels:C.sales.labels,datasets:[{label:'Sales (Rs)',data:C.sales.data,backgroundColor:'#2563eb',maxBarThickness:48}]},options:{scales:{y:{beginAtZero:true}}}});
-new Chart(c2,{type:'bar',data:{labels:C.prod.labels,datasets:[{label:'Expected',data:C.prod.expected,backgroundColor:'#93c5fd'},{label:'Actual',data:C.prod.actual,backgroundColor:'#1d4ed8'}]}});
-new Chart(c3,{type:'bar',data:{labels:C.stock.labels,datasets:[{label:'Stock',data:C.stock.data,backgroundColor:'#0f2742'}]}});</script>{% endblock %}
+Chart.defaults.font.family="'Plus Jakarta Sans',sans-serif";Chart.defaults.color='#6b6a86';
+new Chart(c1,{type:'bar',data:{labels:C.sales.labels,datasets:[{label:'Sales (Rs)',data:C.sales.data,backgroundColor:'#7c3aed',borderRadius:8,maxBarThickness:48}]},options:{scales:{y:{beginAtZero:true}}}});
+new Chart(c2,{type:'bar',data:{labels:C.prod.labels,datasets:[{label:'Expected',data:C.prod.expected,backgroundColor:'#f9a8d4',borderRadius:6},{label:'Actual',data:C.prod.actual,backgroundColor:'#7c3aed',borderRadius:6}]}});
+new Chart(c3,{type:'bar',data:{labels:C.stock.labels,datasets:[{label:'Stock',data:C.stock.data,backgroundColor:'#f97316',borderRadius:6}]}});</script>{% endblock %}
